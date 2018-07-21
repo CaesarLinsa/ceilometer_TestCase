@@ -1,10 +1,12 @@
 
-from caesar import sample
-import uuid
 import datetime
-from oslo_config import cfg
-from caesar.impl_mongodb import  Connection
 import itertools
+import uuid
+from oslo_config import cfg
+from  caesar.storage import get_connection
+
+from caesar import sample
+
 
 conf = cfg.ConfigOpts()
 
@@ -26,7 +28,7 @@ for group, options in list_opts():
 resource_id = str(uuid.uuid4())
 test_data = [
     sample.Sample(
-        name='alpha',
+        name='caesar',
         type=sample.TYPE_CUMULATIVE,
         unit='',
         volume=1,
@@ -37,7 +39,7 @@ test_data = [
         resource_metadata={'name': 'TestPublish'},
     ),
     sample.Sample(
-        name='beta',
+        name='ciro',
         type=sample.TYPE_CUMULATIVE,
         unit='',
         volume=1,
@@ -48,7 +50,7 @@ test_data = [
         resource_metadata={'name': 'TestPublish'},
     ),
     sample.Sample(
-        name='gamma',
+        name='river',
         type=sample.TYPE_CUMULATIVE,
         unit='',
         volume=1,
@@ -81,8 +83,7 @@ def meter_message_from_counter(sample):
            }
     return msg
 
-
-conn = Connection(conf, 'mongodb://196.168.1.111:27017/test')
+conn = get_connection(conf, 'mongodb+mongodb://196.168.1.112:27017/test')
 conn.record_metering_data([
     meter_message_from_counter(sample)
             for sample in test_data])

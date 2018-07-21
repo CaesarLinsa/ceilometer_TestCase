@@ -16,22 +16,24 @@
 # under the License.
 """MongoDB storage backend"""
 
-import itertools
-import operator
-
 import copy
 import datetime
+import itertools
+import operator
 import uuid
 
 import bson.code
 import bson.objectid
-from oslo_log import log
-from oslo_utils import timeutils
 import pymongo
 import six
+from oslo_log import log
+from oslo_utils import timeutils
+
+from caesar import base
 from caesar.mongo import utils as pymongo_utils
+
 LOG = log.getLogger(__name__)
-import pymongo_base
+import caesar.storage.pymongo_base
 from caesar import utils
 from caesar import models
 
@@ -52,7 +54,7 @@ AVAILABLE_CAPABILITIES = {
 }
 
 
-class Connection(pymongo_base.Connection):
+class Connection(caesar.storage.pymongo_base.Connection):
     """Put the data into a MongoDB database
 
     Collections::
@@ -70,7 +72,7 @@ class Connection(pymongo_base.Connection):
             }
     """
 
-    CAPABILITIES = utils.update_nested(pymongo_base.Connection.CAPABILITIES,
+    CAPABILITIES = utils.update_nested(caesar.storage.pymongo_base.Connection.CAPABILITIES,
                                        AVAILABLE_CAPABILITIES)
     CONNECTION_POOL = pymongo_utils.ConnectionPool()
 
@@ -564,7 +566,7 @@ class Connection(pymongo_base.Connection):
 
         group_stage.update({"_id": unique_group_field})
 
-        self._compile_aggregate_stages(aggregate, group_stage, project_stage)
+    #    self._compile_aggregate_stages(aggregate, group_stage, project_stage)
 
         # Aggregation stages list. It's work one by one and uses documents
         # from previous stages.
@@ -604,15 +606,14 @@ class Connection(pymongo_base.Connection):
         stats_args = self._stats_result_aggregates(result, aggregate)
 
         stats_args['unit'] = result['unit']
-        stats_args['duration'] = (result["last_timestamp"] -
-                                  result["first_timestamp"]).total_seconds()
+        stats_args['duration'] = 5
         stats_args['duration_start'] = result['first_timestamp']
         stats_args['duration_end'] = result['last_timestamp']
         stats_args['period'] = period
         start = result.get("period_start", 0) * period
 
-        stats_args['period_start'] = (first_timestamp +
-                                      datetime.timedelta(seconds=start))
+        # stats_args['period_start'] = (first_timestamp +
+        #                               datetime.timedelta(seconds=start))
         stats_args['period_end'] = (first_timestamp +
                                     datetime.timedelta(seconds=start + period)
                                     if period else result['last_timestamp'])
@@ -620,17 +621,18 @@ class Connection(pymongo_base.Connection):
         stats_args['groupby'] = (
             dict((g, result['_id'].get(g.replace(".", "/")))
                  for g in groupby) if groupby else None)
+        print stats_args
         return models.Statistics(**stats_args)
 
     def _compile_aggregate_stages(self, aggregate, group_stage, project_stage):
         if not aggregate:
             for aggregation in Connection.STANDARD_AGGREGATES.values():
                 group_stage.update(
-                    aggregation.group(version_array=self.version)
+                    aggregation.group(version_array=2.6)
                 )
                 project_stage.update(
                     aggregation.project(
-                        version_array=self.version
+                        version_array=2.6
                     )
                 )
         else:
@@ -658,6 +660,6 @@ class Connection(pymongo_base.Connection):
             return results
 
     def _make_aggregation_params(self):
-        if self.version >= pymongo_utils.COMPLETE_AGGREGATE_COMPATIBLE_VERSION:
-            return {"allowDiskUse": True}
+        # if self.version >= pymongo_utils.COMPLETE_AGGREGATE_COMPATIBLE_VERSION:
+        #     return {"allowDiskUse": True}
         return {}

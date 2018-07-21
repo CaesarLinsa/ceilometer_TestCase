@@ -79,8 +79,8 @@ class Sample(base.Model):
                  user_id, project_id, resource_id,
                  timestamp, resource_metadata,
                  message_id,
-                 message_signature,
                  recorded_at,
+                 monotonic_time
                  ):
         """Create a new sample.
 
@@ -111,8 +111,8 @@ class Sample(base.Model):
                             timestamp=timestamp,
                             resource_metadata=resource_metadata,
                             message_id=message_id,
-                            message_signature=message_signature,
-                            recorded_at=recorded_at)
+                            recorded_at=recorded_at,
+                            monotonic_time=monotonic_time)
 
 
 class Statistics(base.Model):

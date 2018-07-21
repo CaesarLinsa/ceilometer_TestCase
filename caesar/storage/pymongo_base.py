@@ -47,16 +47,6 @@ class Connection(base.Connection):
 
     def get_meters(self, user=None, project=None, resource=None, source=None,
                    metaquery=None, limit=None, unique=False):
-        """Return an iterable of models.Meter instances
-
-        :param user: Optional ID for user that owns the resource.
-        :param project: Optional ID for project that owns the resource.
-        :param resource: Optional resource filter.
-        :param source: Optional source filter.
-        :param metaquery: Optional dict with metadata to match on.
-        :param limit: Maximum number of results to return.
-        :param unique: If set to true, return only unique meter information.
-        """
         if limit == 0:
             return
 
@@ -129,8 +119,7 @@ class Connection(base.Connection):
             return []
         q = pymongo_utils.make_query_from_filter(sample_filter,
                                                  require_meter=False)
-
-        return self._retrieve_samples(q,
+        return self.retrieve_samples(q,
                                       [("timestamp", pymongo.DESCENDING)],
                                       limit)
 
@@ -145,9 +134,9 @@ class Connection(base.Connection):
         if filter_expr is not None:
             query_filter = transformer.transform_filter(filter_expr)
 
-        return self._retrieve_samples(query_filter, orderby_filter, limit)
+        return self.retrieve_samples(query_filter, orderby_filter, limit)
 
-    def _retrieve_samples(self, query, orderby, limit):
+    def retrieve_samples(self, query, orderby, limit):
         if limit is not None:
             samples = self.db.meter.find(query,
                                          limit=limit,
@@ -172,4 +161,5 @@ class Connection(base.Connection):
             if s.get('resource_metadata'):
                 s['resource_metadata'] = pymongo_utils.unquote_keys(
                     s.get('resource_metadata'))
+            print s
             yield models.Sample(**s)
