@@ -83,7 +83,9 @@ def meter_message_from_counter(sample):
            }
     return msg
 
-conn = get_connection(conf, 'mongodb+mongodb://196.168.1.112:27017/test')
+conn = get_connection(conf, 'mongodb+mongodb://196.168.1.111:27017,'
+                      '196.168.1.112:27017,'
+                      '196.168.1.113:27017/test')
 conn.record_metering_data([
     meter_message_from_counter(sample)
             for sample in test_data])

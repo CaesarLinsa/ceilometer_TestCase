@@ -161,5 +161,4 @@ class Connection(base.Connection):
             if s.get('resource_metadata'):
                 s['resource_metadata'] = pymongo_utils.unquote_keys(
                     s.get('resource_metadata'))
-            print s
             yield models.Sample(**s)
