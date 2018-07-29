@@ -3,9 +3,9 @@ import datetime
 import itertools
 import uuid
 from oslo_config import cfg
-from  caesar.storage import get_connection
+from  caesarlinsa.storage import get_connection
 
-from caesar import sample
+from caesarlinsa import sample
 
 
 conf = cfg.ConfigOpts()
@@ -28,7 +28,7 @@ for group, options in list_opts():
 resource_id = str(uuid.uuid4())
 test_data = [
     sample.Sample(
-        name='caesar',
+        name='caesarlinsa',
         type=sample.TYPE_CUMULATIVE,
         unit='',
         volume=1,

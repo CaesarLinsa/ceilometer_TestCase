@@ -14,7 +14,7 @@
 # under the License.
 """Model classes for use in the storage API.
 """
-from caesar import base
+from caesarlinsa import base
 
 
 class Resource(base.Model):

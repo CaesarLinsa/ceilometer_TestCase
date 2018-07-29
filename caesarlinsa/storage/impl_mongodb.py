@@ -29,13 +29,13 @@ import six
 from oslo_log import log
 from oslo_utils import timeutils
 
-from caesar import base
-from caesar.mongo import utils as pymongo_utils
+from caesarlinsa import base
+from caesarlinsa.mongo import utils as pymongo_utils
 
 LOG = log.getLogger(__name__)
-import caesar.storage.pymongo_base
-from caesar import utils
-from caesar import models
+import caesarlinsa.storage.pymongo_base
+from caesarlinsa import utils
+from caesarlinsa import models
 
 AVAILABLE_CAPABILITIES = {
     'resources': {'query': {'simple': True,
@@ -54,7 +54,7 @@ AVAILABLE_CAPABILITIES = {
 }
 
 
-class Connection(caesar.storage.pymongo_base.Connection):
+class Connection(caesarlinsa.storage.pymongo_base.Connection):
     """Put the data into a MongoDB database
 
     Collections::
@@ -72,7 +72,7 @@ class Connection(caesar.storage.pymongo_base.Connection):
             }
     """
 
-    CAPABILITIES = utils.update_nested(caesar.storage.pymongo_base.Connection.CAPABILITIES,
+    CAPABILITIES = utils.update_nested(caesarlinsa.storage.pymongo_base.Connection.CAPABILITIES,
                                        AVAILABLE_CAPABILITIES)
     CONNECTION_POOL = pymongo_utils.ConnectionPool()
 
