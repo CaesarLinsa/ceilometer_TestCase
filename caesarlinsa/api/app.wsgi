@@ -17,8 +17,8 @@
 
 See http://pecan.readthedocs.org/en/latest/deployment.html for details.
 """
-from ceilometer import service
-from ceilometer.api import app
+from caesarlinsa import service
+from caesarlinsa.api import app
 
 # Initialize the oslo configuration library and logging
 conf = service.prepare_service([])

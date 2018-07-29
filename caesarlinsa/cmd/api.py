@@ -13,23 +13,14 @@
 # WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 # License for the specific language governing permissions and limitations
 # under the License.
-
-import logging
-
-import itertools
-from cotyledon import oslo_config_glue
 from oslo_log import log
-from oslo_config import cfg
 from caesarlinsa.api import app
 from caesarlinsa import service
 
 LOG = log.getLogger(__name__)
 
 
-def build_wsgi_app(argv=None):
-    conf = service.prepare_service(argv)
-    if conf.log_options:
-        LOG.debug('Full set of CONF:')
-        conf.log_opt_values(LOG, logging.DEBUG)
-    return app.load_app(conf)
+def main(argv=None):
+    service.prepare_service(argv)
+    return app.build_server()
 

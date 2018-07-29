@@ -12,49 +12,51 @@
 # WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 # License for the specific language governing permissions and limitations
 # under the License.
-
+from oslo_config import cfg
 from oslo_log import log
-from oslo_policy import policy
 
 from pecan import hooks
 from caesarlinsa import storage
 LOG = log.getLogger(__name__)
+
 
 class ConfigHook(hooks.PecanHook):
     """Attach the configuration object to the request.
 
     That allows controllers to get it.
     """
-    def __init__(self, conf):
-        super(ConfigHook, self).__init__()
-        self.conf = conf
-        self.enforcer = policy.Enforcer(conf)
-        self.enforcer.load_rules()
 
-    def on_route(self, state):
-        state.request.cfg = self.conf
-        state.request.enforcer = self.enforcer
+    @staticmethod
+    def before(state):
+        state.request.cfg = cfg.CONF
 
 
 class DBHook(hooks.PecanHook):
 
-    def __init__(self, conf):
-        self.storage_connection = self.get_connection(conf)
+    def __init__(self):
+        self.storage_connection = DBHook.get_connection('metering')
+        self.event_storage_connection = DBHook.get_connection('event')
+        self.alarm_storage_connection = DBHook.get_connection('alarm')
 
-        if not self.storage_connection:
-            raise Exception(
-                "API failed to start. Failed to connect to database")
+        if (not self.storage_connection and
+                not self.event_storage_connection and
+                not self.alarm_storage_connection):
+            raise Exception("Api failed to start. Failed to connect to "
+                            "databases, purpose:  %s" %
+                            ', '.join(['metering', 'event', 'alarm']))
 
     def before(self, state):
         state.request.storage_conn = self.storage_connection
+        state.request.event_storage_conn = self.event_storage_connection
+        state.request.alarm_storage_conn = self.alarm_storage_connection
 
     @staticmethod
-    def get_connection(conf):
+    def get_connection(purpose):
         try:
-            return storage.get_connection_from_config(conf)
+            return storage.get_connection_from_config(cfg.CONF, purpose)
         except Exception as err:
-            LOG.exception("Failed to connect to db" "retry later: %s" % str(err))
-
+            params = {"purpose": purpose, "err": err}
+            LOG.exception("Failed to connect to db, purpose %s" % params)
 
 
 class TranslationHook(hooks.PecanHook):
