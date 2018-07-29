@@ -6,7 +6,7 @@ from stevedore import driver
 def get_connection(conf, url):
     connection_scheme = urlparse.urlparse(url).scheme
     engine_name = connection_scheme.split('+')[0]
-    namespace = 'caesarlinsa.metering.storage'
+    namespace = 'caesar.metering.storage'
     mgr = driver.DriverManager(namespace, engine_name)
     url = url.split("+")[-1]
     return mgr.driver(conf, url)
