@@ -15,10 +15,10 @@
 """Common functions for MongoDB backend."""
 import pymongo
 
-from caesar import base
-from caesar import models
-from caesar.mongo import utils as pymongo_utils
-from caesar import utils
+from caesarlinsa import base
+from caesarlinsa import models
+from caesarlinsa.mongo import utils as pymongo_utils
+from caesarlinsa import utils
 
 
 COMMON_AVAILABLE_CAPABILITIES = {

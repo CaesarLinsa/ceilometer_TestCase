@@ -26,7 +26,7 @@ import pymongo.errors
 import six
 from six.moves.urllib import parse
 
-from caesar.i18n import _, _LI, _LE
+from caesarlinsa.i18n import _, _LI, _LE
 
 ERROR_INDEX_WITH_DIFFERENT_SPEC_ALREADY_EXISTS = 86
 
