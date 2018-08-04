@@ -140,6 +140,6 @@ def build_server():
     serving.run_simple(cfg.CONF.api.host, cfg.CONF.api.port,
                        app, processes=CONF.api.workers)
 
-def app_factory(global_config, **local_conf):
+def app_factory():
     return VersionSelectorApplication()
 
