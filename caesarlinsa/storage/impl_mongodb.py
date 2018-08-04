@@ -151,6 +151,9 @@ class Connection(caesarlinsa.storage.pymongo_base.Connection):
         # needed.
         self.upgrade()
 
+    def meter_find(self):
+        return self.db.meter.find()
+
     @staticmethod
     def update_ttl(ttl, ttl_index_name, index_field, coll):
         """Update or create time_to_live indexes.
