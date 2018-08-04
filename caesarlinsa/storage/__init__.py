@@ -1,9 +1,17 @@
 import urlparse
+
+
 from caesarlinsa import utils
 from stevedore import driver
 
 
-def get_connection(conf, url):
+def get_connection_from_config(conf):
+    def _inner():
+        url = conf.database.connection
+        return get_connection(conf, url)
+    return _inner()
+
+def  get_connection(conf, url):
     connection_scheme = urlparse.urlparse(url).scheme
     engine_name = connection_scheme.split('+')[0]
     namespace = 'caesar.metering.storage'
