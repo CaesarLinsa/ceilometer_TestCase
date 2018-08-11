@@ -31,6 +31,7 @@ class ConfigHook(hooks.PecanHook):
     def on_route(self, state):
         state.request.cfg = self.conf
 
+
 class DBHook(hooks.PecanHook):
 
     def __init__(self, conf):
