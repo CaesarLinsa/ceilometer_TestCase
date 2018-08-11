@@ -14,7 +14,6 @@
 # under the License.
 from oslo_config import cfg
 from oslo_log import log
-from oslo_policy import policy
 from pecan import hooks
 from caesarlinsa import storage
 LOG = log.getLogger(__name__)
@@ -28,12 +27,10 @@ class ConfigHook(hooks.PecanHook):
     def __init__(self, conf):
         super(ConfigHook, self).__init__()
         self.conf = conf
-        self.enforcer = policy.Enforcer(conf)
-        self.enforcer.load_rules()
 
     def on_route(self, state):
         state.request.cfg = self.conf
-        state.request.enforcer = self.enforcer
+
 
 class DBHook(hooks.PecanHook):
 
