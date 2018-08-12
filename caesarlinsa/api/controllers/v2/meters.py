@@ -384,9 +384,6 @@ class MeterController(rest.RestController):
                        period long of that number of seconds.
         :param aggregate: The selectable aggregation functions to be applied.
         """
-
-        rbac.enforce('compute_statistics', pecan.request)
-
         q = q or []
         groupby = groupby or []
         aggregate = aggregate or []
