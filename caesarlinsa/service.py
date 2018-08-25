@@ -22,6 +22,7 @@ def prepare_service(argv=None, config_file=None, conf=None):
         argv = sys.argv
 
     if conf is None:
+        log.register_options(cfg.CONF)
         conf = cfg.ConfigOpts()
 
     log_level = cfg.CONF.default_log_levels

@@ -14,7 +14,7 @@ def get_connection_from_config(conf):
 def  get_connection(conf, url):
     connection_scheme = urlparse.urlparse(url).scheme
     engine_name = connection_scheme.split('+')[0]
-    namespace = 'caesar.metering.storage'
+    namespace = 'caesarlinsa.metering.storage'
     mgr = driver.DriverManager(namespace, engine_name)
     url = url.split("+")[-1]
     return mgr.driver(conf, url)
