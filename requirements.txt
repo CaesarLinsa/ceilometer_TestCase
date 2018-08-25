@@ -7,3 +7,7 @@ futurist>=1.7.0;python_version=='2.7'
 oslo.concurrency>=3.27.0;python_version=='2.7'
 lxml>=4.2.4;python_version=='2.7' # apt-get install python-lxml install
 werkzeug>=4.2.4;python_version=='2.7'
+oslo_middleware>=3.36.0;python_version=='2.7'
+pymongo>=3.7.1;python_version=='2.7'
+netifaces>=0.10.6;python_version=='2.7'
+WSME>=0.9.3;python_version=='2.7'

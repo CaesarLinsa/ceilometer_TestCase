@@ -43,9 +43,21 @@ API_OPTS = [
                help='default workers for caesar-api'
                ),
 ]
-
+data_OPTS = [
+    cfg.IntOpt('max_retries',
+                default=3,
+                help="max connection to database times"
+                     ),
+    cfg.IntOpt('retry_interval',
+               default=60,
+               help='connection timeout 300 senconds'),
+    cfg.StrOpt('connection',
+                default='',
+                help='connection mongodb url')
+    ]
 CONF.register_opts(OPTS)
 CONF.register_opts(API_OPTS, group='api')
+CONF.register_opts(data_OPTS,group='database')
 
 
 def get_pecan_config():
