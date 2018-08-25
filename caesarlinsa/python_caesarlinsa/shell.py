@@ -53,8 +53,8 @@ class shellmain(object):
         return subcommand_parser.parse_args(argv)
 
     def main(self,argv):
-        parse = self.parse_args(argv)
-        parse.func(argv)
+        parsed = self.parse_args(argv)
+        parsed.func(parsed)
 
 
 def main(argv=None):
