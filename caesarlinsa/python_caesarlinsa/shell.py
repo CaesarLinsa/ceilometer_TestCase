@@ -23,13 +23,13 @@ class shellmain(object):
 
     def import_modules(self, path):
         __import__(path)
-        modules = sys.modules(path)
+        modules = sys.modules[path]
         return modules
 
     def get_subcommand_parser(self):
         parser = self.get_base_parse()
         subparser= parser.add_subparsers(metavar='<command>')
-        sub_modules = self.import_modules('python-caesarlinsa.v2.meter')
+        sub_modules = self.import_modules('caesarlinsa.python_caesarlinsa.v2.meters')
         for fn_name in (func for func in dir(sub_modules) if func.startswith('do_')):
             command = fn_name[3:].replace('_','-')
             callback = getattr(sub_modules,fn_name)
