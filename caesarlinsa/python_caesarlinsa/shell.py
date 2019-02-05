@@ -43,7 +43,7 @@ class shellmain(object):
                                             )
             for (args,kwargs) in arguments:
                 subparser_s.add_argument(*args, **kwargs)
-            subparser_s.set_default(func=callback)
+            subparser_s.set_defaults(func=callback)
         return parser
 
     def parse_args(self,argv):
