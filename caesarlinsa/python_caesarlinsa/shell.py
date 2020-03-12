@@ -34,7 +34,7 @@ class shellmain(object):
             command = fn_name[3:].replace('_','-')
             callback = getattr(sub_modules,fn_name)
             desc=callback.__doc__ or ''
-            help=desc.strip()[0]
+            help=desc.strip()
             arguments = getattr(callback,'arguments',[])
             subparser_s = subparser.add_parser(
                                              command,

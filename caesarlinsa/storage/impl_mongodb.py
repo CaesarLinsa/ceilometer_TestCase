@@ -624,7 +624,6 @@ class Connection(caesarlinsa.storage.pymongo_base.Connection):
         stats_args['groupby'] = (
             dict((g, result['_id'].get(g.replace(".", "/")))
                  for g in groupby) if groupby else None)
-        print stats_args
         return models.Statistics(**stats_args)
 
     def _compile_aggregate_stages(self, aggregate, group_stage, project_stage):

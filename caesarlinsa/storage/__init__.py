@@ -1,4 +1,4 @@
-import urlparse
+import urllib import parse as urlparse
 
 
 from caesarlinsa import utils
