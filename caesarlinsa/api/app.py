@@ -24,6 +24,7 @@ import pecan
 from caesarlinsa.api import hooks
 from caesarlinsa.api import middleware
 from werkzeug import serving
+import ssl
 
 LOG = log.getLogger(__name__)
 CONF = cfg.CONF
@@ -55,10 +56,19 @@ data_OPTS = [
                 default='',
                 help='connection mongodb url')
     ]
+
+ssl_OPTS = [
+        cfg.StrOpt('ssl_key_path',
+                   default='',
+                   help='ssl key path'),
+        cfg.StrOpt('ssl_cert_path',
+                   default='',
+                   help='ssl certfication path')
+        ]
 CONF.register_opts(OPTS)
 CONF.register_opts(API_OPTS, group='api')
 CONF.register_opts(data_OPTS,group='database')
-
+CONF.register_opts(ssl_OPTS, group='ssl')
 
 def get_pecan_config():
     # Set up the pecan configuration
@@ -131,6 +141,13 @@ def load_app():
     LOG.info("Full WSGI config used: %s" % cfg_file)
     return deploy.loadapp("config:" + cfg_file)
 
+def load_cert():
+    key_file = cfg.CONF.ssl.ssl_key_path
+    cert_file = cfg.CONF.ssl.ssl_cert_path
+    context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+    context.load_cert_chain(cert_file, key_file)
+    return context
+
 
 def build_server():
     app = load_app()
@@ -147,9 +164,10 @@ def build_server():
             % (port,  port))
     else:
         LOG.info("serving on http://%s:%s"  % (host, port))
-
+    ctx = load_cert()
     serving.run_simple(cfg.CONF.api.host, cfg.CONF.api.port,
-                       app, processes=CONF.api.workers)
+                       app, processes=CONF.api.workers,
+                       ssl_context=ctx)
 
 def app_factory(global_config, **local_conf):
     return VersionSelectorApplication()
